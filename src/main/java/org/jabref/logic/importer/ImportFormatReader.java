@@ -192,6 +192,8 @@ public class ImportFormatReader {
                 if (parserResult.getDatabase().hasEntries() || !parserResult.getDatabase().hasNoStrings()) {
                     parserResult.setPath(filePath);
                     return new UnknownFormatImport(ImportFormatReader.BIBTEX_FORMAT, parserResult);
+                } else if (filePath.toString().toLowerCase().endsWith(".bib")) {
+                    throw new ImportException(parserResult.getErrorMessage());
                 } else {
                     throw new ImportException(Localization.lang("Could not find a suitable import format."));
                 }
