@@ -1,18 +1,18 @@
 package org.jabref.logic.importer;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.Set;
-
 import org.jabref.logic.xmp.XmpPreferences;
 import org.jabref.model.util.DummyFileUpdateMonitor;
 import org.jabref.model.util.FileUpdateMonitor;
 import org.jabref.preferences.GeneralPreferences;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -51,5 +51,13 @@ class ImportFormatReaderTestParameterless {
     @Test
     void importFromFileWithUnknownFormatThrowsException() throws Exception {
         assertThrows(ImportException.class, () -> reader.importFromFile("someunknownformat", Path.of("somepath")));
+    }
+
+    @Test
+    void importBibFileThrowsExceptionIfTheFileWithFieldsThatAreNotSeperatedByComma() throws Exception {
+        Path file = Path.of(ImportFormatReaderTestParameterless.class.getResource("fileformat/BibWithMissingComma.bib").toURI());
+        Exception exception = assertThrows(ImportException.class, () -> reader.importUnknownFormat(file, fileMonitor));
+        assertEquals("Error occurred when parsing entry: 'Error in line 8 or above: Empty text token.\n" +
+                "This could be caused by a missing comma between two fields.'. Skipped entry.", exception.getMessage());
     }
 }
