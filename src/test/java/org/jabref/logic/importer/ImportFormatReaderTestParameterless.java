@@ -52,7 +52,8 @@ class ImportFormatReaderTestParameterless {
     void importFromFileWithUnknownFormatThrowsException() throws Exception {
         assertThrows(ImportException.class, () -> reader.importFromFile("someunknownformat", Path.of("somepath")));
     }
-
+    
+    //test added for group-34 issue #8 Check for missing commas in .bib file (Github #8011)
     @Test
     void importBibFileThrowsExceptionIfTheFileWithFieldsThatAreNotSeperatedByComma() throws Exception {
         Path file = Path.of(ImportFormatReaderTestParameterless.class.getResource("fileformat/BibWithMissingComma.bib").toURI());
